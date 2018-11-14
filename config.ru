@@ -8,5 +8,6 @@ use Rack::MethodOverride
 use PostsController
 use UsersController
 use SessionsController
+use Rack::Flash
 run ApplicationController
 

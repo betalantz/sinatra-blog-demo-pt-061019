@@ -6,6 +6,7 @@ class PostsController < ApplicationController
             
             erb :'posts/index'
         else
+
             redirect '/signup'
         end
     end
@@ -16,18 +17,30 @@ class PostsController < ApplicationController
     end
 
     get "/posts/:id/edit" do 
-        @users = User.all
-        @post = Post.find_by_id(params[:id])
-        erb :'posts/edit'
+        user = Post.find_by_id(params[:id]).user
+         if user.id == current_user.id
+            @users = User.all
+            @post = Post.find_by_id(params[:id])
+            erb :'posts/edit'
+        else 
+            flash[:err] = "This post does not belong to you!"
+            redirect "/posts"
+        end
     end
     
     patch "/posts/:id" do 
-        @post = Post.find_by_id(params[:id])
-        params.delete("_method")
-        if @post.update(params)
-            redirect "/posts/#{@post.id}"
+        user = Post.find_by_id(params[:id]).user
+        if user.id == current_user.id
+            @post = Post.find_by_id(params[:id])
+            params.delete("_method")
+            if @post.update(params)
+                redirect "/posts/#{@post.id}"
+            else
+                redirect "/posts/#{@post.id}/edit"
+            end
         else
-            redirect "/posts/#{@post.id}/edit"
+            @error = "This post does not belong to you"
+            erb :"/posts/index"
         end
     end
 

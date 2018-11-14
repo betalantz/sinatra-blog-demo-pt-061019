@@ -10,6 +10,7 @@ gem 'thin'
 gem 'shotgun'
 gem 'pry'
 gem 'bcrypt'
+gem 'rack-flash3'
 gem "tux"
 gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'
 

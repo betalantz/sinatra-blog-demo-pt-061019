@@ -5,15 +5,13 @@ class UsersController < ApplicationController
     end
 
     post '/users' do 
-        user = User.new(params)
+        @user = User.new(params)
 
-        if user.save
+        if @user.save
             session["user_id"] =  user.id
-
             redirect "/posts"
-            
         else
-            redirect "/users/new"
+            erb  :"/users/new"
         end
 
     end

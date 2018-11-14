@@ -7,7 +7,8 @@ class ApplicationController < Sinatra::Base
     set :views, 'app/views'
     enable :sessions
     set :session_secret, "secret"
-    end
+    use Rack::Flash, :sweep => true
+  end
 
   get "/" do
     erb :welcome

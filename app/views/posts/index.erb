@@ -1,4 +1,9 @@
+<% if flash.has?(:err) %>
+    <h3><%= flash[:err] %></h3>
+<% end %>
+
 <h1>Welcome <%= @user.name %>. Here are all your posts</h1>
+
 
 <% @posts.each do |post| %>
     <h2><a href="/posts/<%= post.id %>"><%= post.title %></a></h2>
