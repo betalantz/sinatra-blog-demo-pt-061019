@@ -1,11 +1,12 @@
+<% if @p && @p.errors %>
+    <% @p.errors.full_messages.each do |msg| %>
+        <p style="color: red;"><%= msg %></p>
+    <% end %>
+<% end %>
+
 <h1> Create a new Post</h1>
 <form method="POST" action="/posts">
-    <select name="user_id">
-        <% @users.each do |user| %>
-            <option value="<%= user.id %>"><%= user.name %></option>
-        <% end %>
-    </select>
-    <input type="text" name="title">
-    <textarea  name="body" ></textarea>
+    <input type="text" name="title" value="<%= @p ? @p.title : ""%> ">
+    <textarea  name="body" ><%= @p ? @p.body : ""%></textarea>
     <input type="submit">
 </form>

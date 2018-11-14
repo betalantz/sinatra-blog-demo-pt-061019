@@ -14,8 +14,20 @@
     <link rel="stylesheet" href="/stylesheets/main.css" />
   </head>
   <body>
-    <div class="wrapper">
 
+    <div class="wrapper">
+        <nav>
+          <ul>
+            <% if logged_in? %>
+              <li><a href="/posts">All Posts</a></li>
+              <li><a href="/posts/new">New Posts</a></li>
+              <li><a href="/logout">Logout</a></li>
+            <% else %>
+              <li>Sign in</li>
+            <% end %>
+
+          </ul>
+        </nav>
         <%= yield %>
 
       <footer class="branding">

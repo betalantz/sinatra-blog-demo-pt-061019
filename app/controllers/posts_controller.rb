@@ -1,7 +1,13 @@
 class PostsController < ApplicationController
     get '/posts' do #index
-        @posts = Post.all
-        erb :'posts/index'
+        if session["user_id"]
+            @user = current_user
+            @posts = current_user.posts
+            
+            erb :'posts/index'
+        else
+            redirect '/signup'
+        end
     end
     
     get "/posts/new" do 
@@ -36,11 +42,13 @@ class PostsController < ApplicationController
     end
 
     post "/posts" do
-        p = Post.new(params)
-        if p.save
-            redirect "/posts/#{p.id}"
+        user = User.find_by_id(session["user_id"])
+        @p = user.posts.build(params)
+        
+        if @p.save
+            redirect "/posts"
         else
-            redirect "/posts/new"
+            erb  :"/posts/new"
         end
     end
 
