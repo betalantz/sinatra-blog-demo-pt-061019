@@ -84,4 +84,16 @@ class PostsController < ApplicationController
         end
     end
 
+    #delete
+    delete '/posts/:id' do
+        post_user = Post.find_by_id(params[:id]).user
+        if post_user.id == current_user.id
+            Post.destroy(params[:id])
+            redirect :'/posts'
+        else
+            flash[:err] = "You aren't authorized to modify the selected post."
+            redirect :'/posts'
+        end
+    end
+
 end
