@@ -1,36 +1,53 @@
 class PostsController < ApplicationController
-    get '/posts' do #index
-        if session["user_id"]
+   
+    #index
+    get '/posts' do 
+        if logged_in?
             @user = current_user
             @posts = current_user.posts
+            
+            erb :'posts/index'
+        else
+            redirect '/signup'
+        end
+    end
+    
+    #show_all
+    get '/posts/all' do 
+        if logged_in?
+            @posts = Post.all
             
             erb :'posts/index'
         else
 
             redirect '/signup'
         end
+        
     end
-    
+
+    #new
     get "/posts/new" do 
         @users = User.all
         erb :'posts/new'
     end
-
+    
+    #edit
     get "/posts/:id/edit" do 
-        user = Post.find_by_id(params[:id]).user
-         if user.id == current_user.id
+        post_user = Post.find_by_id(params[:id]).user
+         if post_user.id == current_user.id
             @users = User.all
             @post = Post.find_by_id(params[:id])
             erb :'posts/edit'
         else 
-            flash[:err] = "This post does not belong to you!"
+            flash[:err] = "You aren't authorized to modify the selected post."
             redirect "/posts"
         end
     end
     
+    #update
     patch "/posts/:id" do 
-        user = Post.find_by_id(params[:id]).user
-        if user.id == current_user.id
+        post_user = Post.find_by_id(params[:id]).user
+        if post_user.id == current_user.id
             @post = Post.find_by_id(params[:id])
             params.delete("_method")
             if @post.update(params)
@@ -39,12 +56,13 @@ class PostsController < ApplicationController
                 redirect "/posts/#{@post.id}/edit"
             end
         else
-            @error = "This post does not belong to you"
+            flash[:err] = "You aren't authorized to modify the selected post."
             erb :"/posts/index"
         end
     end
 
-    get '/posts/:id' do #show
+    #show
+    get '/posts/:id' do
         @post = Post.find_by_id(params[:id])
 
         if @post 
@@ -54,9 +72,10 @@ class PostsController < ApplicationController
         end
     end
 
+    #create
     post "/posts" do
-        user = User.find_by_id(session["user_id"])
-        @p = user.posts.build(params)
+        
+        @p = current_user.posts.build(params)
         
         if @p.save
             redirect "/posts"

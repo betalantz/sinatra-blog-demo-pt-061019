@@ -2,7 +2,11 @@
     <h3><%= flash[:err] %></h3>
 <% end %>
 
-<h1>Welcome <%= @user.name %>. Here are all your posts</h1>
+<% if @user %>
+    <h1>Welcome <%= @user.name %>. Here are all your posts</h1>
+<% else %>
+    <h2>Here are posts from all users</h2>
+<% end %>
 
 
 <% @posts.each do |post| %>
