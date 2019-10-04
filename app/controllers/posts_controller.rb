@@ -16,10 +16,8 @@ class PostsController < ApplicationController
     get '/posts/all' do 
         if logged_in?
             @posts = Post.all
-            
             erb :'posts/index'
         else
-
             redirect '/signup'
         end
         
@@ -35,7 +33,6 @@ class PostsController < ApplicationController
     get "/posts/:id/edit" do 
         post_user = Post.find_by_id(params[:id]).user
          if post_user.id == current_user.id
-            @users = User.all
             @post = Post.find_by_id(params[:id])
             erb :'posts/edit'
         else 
@@ -74,9 +71,14 @@ class PostsController < ApplicationController
 
     #create
     post "/posts" do
-        
+        # uses ActiveRecord associations to simultaneously
+        # create the new post and push it into the current_user's
+        # collection of posts
         @p = current_user.posts.build(params)
         
+        # triggers ActiveRecord validations on .save
+        # returns boolean to indicate whether or not passed 
+        # validatoins and saved successfully
         if @p.save
             redirect "/posts"
         else
